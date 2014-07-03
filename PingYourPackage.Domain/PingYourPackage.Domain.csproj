@@ -46,6 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Core\EntityRepository.cs" />
+    <Compile Include="Entities\Core\IEntity.cs" />
+    <Compile Include="Entities\Core\IEntityRepository.cs" />
+    <Compile Include="Entities\Core\PaginatedList.cs" />
+    <Compile Include="Entities\Extensions\IQueryableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
