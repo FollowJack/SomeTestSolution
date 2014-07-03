@@ -39,11 +39,15 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Core\EntityRepository.cs" />
@@ -51,12 +55,53 @@
     <Compile Include="Entities\Core\IEntityRepository.cs" />
     <Compile Include="Entities\Core\PaginatedList.cs" />
     <Compile Include="Entities\Extensions\IQueryableExtensions.cs" />
+    <Compile Include="Entities\Configuration\DbInitializer.cs" />
+    <Compile Include="Entities\PingYourPackage.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PingYourPackage.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\PingYourPackage.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PingYourPackage.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\PingYourPackage.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PingYourPackage.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\User.cs">
+      <DependentUpon>PingYourPackage.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Compile Include="Entities\PingYourPackageModelContext.Custom.cs" />
+    <EntityDeploy Include="Entities\PingYourPackage.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PingYourPackage.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Entities\PingYourPackage.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PingYourPackage.edmx</DependentUpon>
+      <LastGenOutput>PingYourPackage.Context.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\PingYourPackage.edmx.diagram">
+      <DependentUpon>PingYourPackage.edmx</DependentUpon>
+    </None>
+    <None Include="Entities\PingYourPackage.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PingYourPackage.edmx</DependentUpon>
+      <LastGenOutput>PingYourPackage.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
