@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Migrations;
-using System.Data.Entity.Migrations.Infrastructure;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Security;
+﻿using System.Web.Security;
 using WebMatrix.WebData;
 
-namespace PingYourPackage.Domain.Entities.Migrations
+namespace PingYourPackage.Domain.Entities.Configuration
 {
     public static class DbInitializer
     {
@@ -31,7 +23,7 @@ namespace PingYourPackage.Domain.Entities.Migrations
 
         private static void InitializeDbConnection()
         {
-            WebSecurity.InitializeDatabaseConnection("DefaultConnection", "User", "Key", "Name", true);
+            WebSecurity.InitializeDatabaseConnection("DefaultConnection", "Users", "ID", "Name", true);
         }
     }
 }

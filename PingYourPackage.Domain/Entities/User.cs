@@ -14,10 +14,13 @@ namespace PingYourPackage.Domain.Entities
     
     public partial class User
     {
-        public System.Guid Key { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public System.DateTime CreatedOn { get; set; }
         public Nullable<System.DateTime> LastUpdatedOn { get; set; }
+        public bool IsLocked { get; set; }
+    
+        public virtual Affiliate Affiliate { get; set; }
     }
 }

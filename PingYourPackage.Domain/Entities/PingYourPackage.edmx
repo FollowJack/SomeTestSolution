@@ -4,52 +4,340 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="PingYourPackageModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="User">
+    <Schema Namespace="PingYourPackageModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Affiliates">
           <Key>
-            <PropertyRef Name="Key" />
+            <PropertyRef Name="ID" />
           </Key>
-          <Property Name="Key" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="CompanyName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TelephoneNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Shipments">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="AffiliateID" Type="int" Nullable="false" />
+          <Property Name="ShipmentTypeID" Type="int" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="ReceiverName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverSurname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverAddress" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverZipCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverCity" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverCountry" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverTelephone" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverEmail" Type="nvarchar" MaxLength="320" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ShipmentStates">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="ShipmentID" Type="int" Nullable="false" />
+          <Property Name="ShipmentStatus" Type="int" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ShipmentTypes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsLocked" Type="bit" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="LastUpdatedOn" Type="datetime" />
         </EntityType>
+        <Association Name="FK_Shipments_Affiliates">
+          <End Role="Affiliates" Type="Self.Affiliates" Multiplicity="1" />
+          <End Role="Shipments" Type="Self.Shipments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Affiliates">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Shipments">
+              <PropertyRef Name="AffiliateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Shipments_ShipmentTypes">
+          <End Role="ShipmentTypes" Type="Self.ShipmentTypes" Multiplicity="1" />
+          <End Role="Shipments" Type="Self.Shipments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShipmentTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Shipments">
+              <PropertyRef Name="ShipmentTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShipmentStates_Shipment">
+          <End Role="Shipments" Type="Self.Shipments" Multiplicity="1" />
+          <End Role="ShipmentStates" Type="Self.ShipmentStates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shipments">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ShipmentStates">
+              <PropertyRef Name="ShipmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Affiliates">
+          <End Role="Affiliates" Type="Self.Affiliates" Multiplicity="1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Affiliates">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="PingYourPackageModelStoreContainer">
-          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Affiliates" EntityType="Self.Affiliates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Shipments" EntityType="Self.Shipments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShipmentStates" EntityType="Self.ShipmentStates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShipmentTypes" EntityType="Self.ShipmentTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Shipments_Affiliates" Association="Self.FK_Shipments_Affiliates">
+            <End Role="Affiliates" EntitySet="Affiliates" />
+            <End Role="Shipments" EntitySet="Shipments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shipments_ShipmentTypes" Association="Self.FK_Shipments_ShipmentTypes">
+            <End Role="ShipmentTypes" EntitySet="ShipmentTypes" />
+            <End Role="Shipments" EntitySet="Shipments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShipmentStates_Shipment" Association="Self.FK_ShipmentStates_Shipment">
+            <End Role="Shipments" EntitySet="Shipments" />
+            <End Role="ShipmentStates" EntitySet="ShipmentStates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Affiliates" Association="Self.FK_Users_Affiliates">
+            <End Role="Affiliates" EntitySet="Affiliates" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PingYourPackageModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="PingYourPackageEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Affiliates" EntityType="PingYourPackageModel.Affiliate" />
+          <EntitySet Name="Shipments" EntityType="PingYourPackageModel.Shipment" />
+          <EntitySet Name="ShipmentStates" EntityType="PingYourPackageModel.ShipmentState" />
+          <EntitySet Name="ShipmentTypes" EntityType="PingYourPackageModel.ShipmentType" />
+          <EntitySet Name="Users" EntityType="PingYourPackageModel.User" />
+          <AssociationSet Name="FK_Shipments_Affiliates" Association="PingYourPackageModel.FK_Shipments_Affiliates">
+            <End Role="Affiliate" EntitySet="Affiliates" />
+            <End Role="Shipment" EntitySet="Shipments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Affiliates" Association="PingYourPackageModel.FK_Users_Affiliates">
+            <End Role="Affiliate" EntitySet="Affiliates" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shipments_ShipmentTypes" Association="PingYourPackageModel.FK_Shipments_ShipmentTypes">
+            <End Role="ShipmentType" EntitySet="ShipmentTypes" />
+            <End Role="Shipment" EntitySet="Shipments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShipmentStates_Shipment" Association="PingYourPackageModel.FK_ShipmentStates_Shipment">
+            <End Role="Shipment" EntitySet="Shipments" />
+            <End Role="ShipmentState" EntitySet="ShipmentStates" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Affiliate">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="CompanyName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TelephoneNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Shipments" Relationship="PingYourPackageModel.FK_Shipments_Affiliates" FromRole="Affiliate" ToRole="Shipment" />
+          <NavigationProperty Name="User" Relationship="PingYourPackageModel.FK_Users_Affiliates" FromRole="Affiliate" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Shipment">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="AffiliateID" Type="Int32" Nullable="false" />
+          <Property Name="ShipmentTypeID" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ReceiverName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiverSurname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiverAddress" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiverZipCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiverCity" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiverCountry" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiverTelephone" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiverEmail" Type="String" Nullable="false" MaxLength="320" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Affiliate" Relationship="PingYourPackageModel.FK_Shipments_Affiliates" FromRole="Shipment" ToRole="Affiliate" />
+          <NavigationProperty Name="ShipmentType" Relationship="PingYourPackageModel.FK_Shipments_ShipmentTypes" FromRole="Shipment" ToRole="ShipmentType" />
+          <NavigationProperty Name="ShipmentStates" Relationship="PingYourPackageModel.FK_ShipmentStates_Shipment" FromRole="Shipment" ToRole="ShipmentState" />
+        </EntityType>
+        <EntityType Name="ShipmentState">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="ShipmentID" Type="Int32" Nullable="false" />
+          <Property Name="ShipmentStatus" Type="Int32" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Shipment" Relationship="PingYourPackageModel.FK_ShipmentStates_Shipment" FromRole="ShipmentState" ToRole="Shipment" />
+        </EntityType>
+        <EntityType Name="ShipmentType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Shipments" Relationship="PingYourPackageModel.FK_Shipments_ShipmentTypes" FromRole="ShipmentType" ToRole="Shipment" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
-            <PropertyRef Name="Key" />
+            <PropertyRef Name="ID" />
           </Key>
-          <Property Name="Key" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastUpdatedOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Affiliate" Relationship="PingYourPackageModel.FK_Users_Affiliates" FromRole="User" ToRole="Affiliate" />
+          <Property Name="IsLocked" Type="Boolean" Nullable="false" />
         </EntityType>
-        <EntityContainer Name="PingYourPackageEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Users" EntityType="Self.User" />
-        </EntityContainer>
-      </Schema>
+        <Association Name="FK_Shipments_Affiliates">
+          <End Type="PingYourPackageModel.Affiliate" Role="Affiliate" Multiplicity="1" />
+          <End Type="PingYourPackageModel.Shipment" Role="Shipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Affiliate">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Shipment">
+              <PropertyRef Name="AffiliateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Affiliates">
+          <End Type="PingYourPackageModel.Affiliate" Role="Affiliate" Multiplicity="1" />
+          <End Type="PingYourPackageModel.User" Role="User" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Affiliate">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Shipments_ShipmentTypes">
+          <End Type="PingYourPackageModel.ShipmentType" Role="ShipmentType" Multiplicity="1" />
+          <End Type="PingYourPackageModel.Shipment" Role="Shipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShipmentType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Shipment">
+              <PropertyRef Name="ShipmentTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShipmentStates_Shipment">
+          <End Type="PingYourPackageModel.Shipment" Role="Shipment" Multiplicity="1" />
+          <End Type="PingYourPackageModel.ShipmentState" Role="ShipmentState" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shipment">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ShipmentState">
+              <PropertyRef Name="ShipmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="PingYourPackageModelStoreContainer" CdmEntityContainer="PingYourPackageEntities">
+          <EntitySetMapping Name="Affiliates">
+            <EntityTypeMapping TypeName="PingYourPackageModel.Affiliate">
+              <MappingFragment StoreEntitySet="Affiliates">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="TelephoneNumber" ColumnName="TelephoneNumber" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shipments">
+            <EntityTypeMapping TypeName="PingYourPackageModel.Shipment">
+              <MappingFragment StoreEntitySet="Shipments">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="ReceiverEmail" ColumnName="ReceiverEmail" />
+                <ScalarProperty Name="ReceiverTelephone" ColumnName="ReceiverTelephone" />
+                <ScalarProperty Name="ReceiverCountry" ColumnName="ReceiverCountry" />
+                <ScalarProperty Name="ReceiverCity" ColumnName="ReceiverCity" />
+                <ScalarProperty Name="ReceiverZipCode" ColumnName="ReceiverZipCode" />
+                <ScalarProperty Name="ReceiverAddress" ColumnName="ReceiverAddress" />
+                <ScalarProperty Name="ReceiverSurname" ColumnName="ReceiverSurname" />
+                <ScalarProperty Name="ReceiverName" ColumnName="ReceiverName" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="ShipmentTypeID" ColumnName="ShipmentTypeID" />
+                <ScalarProperty Name="AffiliateID" ColumnName="AffiliateID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShipmentStates">
+            <EntityTypeMapping TypeName="PingYourPackageModel.ShipmentState">
+              <MappingFragment StoreEntitySet="ShipmentStates">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="ShipmentStatus" ColumnName="ShipmentStatus" />
+                <ScalarProperty Name="ShipmentID" ColumnName="ShipmentID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShipmentTypes">
+            <EntityTypeMapping TypeName="PingYourPackageModel.ShipmentType">
+              <MappingFragment StoreEntitySet="ShipmentTypes">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="PingYourPackageModel.User">
-              <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="Key" ColumnName="Key" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
                 <ScalarProperty Name="LastUpdatedOn" ColumnName="LastUpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

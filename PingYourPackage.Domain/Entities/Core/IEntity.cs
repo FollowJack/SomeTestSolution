@@ -8,5 +8,6 @@ namespace PingYourPackage.Domain.Entities.Core
 {
     public interface IEntity
     {
+        int ID { get; set; }
     }
 }

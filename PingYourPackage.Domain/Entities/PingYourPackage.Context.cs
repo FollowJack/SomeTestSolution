@@ -25,6 +25,10 @@ namespace PingYourPackage.Domain.Entities
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Affiliate> Affiliates { get; set; }
+        public virtual DbSet<Shipment> Shipments { get; set; }
+        public virtual DbSet<ShipmentState> ShipmentStates { get; set; }
+        public virtual DbSet<ShipmentType> ShipmentTypes { get; set; }
         public virtual DbSet<User> Users { get; set; }
     }
 }

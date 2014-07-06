@@ -4,8 +4,16 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="96ae69f20348470f89e13ac82780c204" Name="Diagram1">
-        <EntityTypeShape EntityType="PingYourPackageModel.User" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+      <Diagram DiagramId="96ae69f20348470f89e13ac82780c204" Name="Diagram1" ZoomLevel="85">
+        <EntityTypeShape EntityType="PingYourPackageModel.Affiliate" Width="1.5" PointX="1.375" PointY="4" />
+        <EntityTypeShape EntityType="PingYourPackageModel.Shipment" Width="1.5" PointX="6.625" PointY="3.25" />
+        <EntityTypeShape EntityType="PingYourPackageModel.ShipmentState" Width="1.5" PointX="8.875" PointY="4.25" />
+        <EntityTypeShape EntityType="PingYourPackageModel.ShipmentType" Width="1.5" PointX="4.375" PointY="1.25" />
+        <EntityTypeShape EntityType="PingYourPackageModel.User" Width="1.5" PointX="3.75" PointY="4.375" />
+        <AssociationConnector Association="PingYourPackageModel.FK_Shipments_Affiliates" />
+        <AssociationConnector Association="PingYourPackageModel.FK_Users_Affiliates" />
+        <AssociationConnector Association="PingYourPackageModel.FK_Shipments_ShipmentTypes" />
+        <AssociationConnector Association="PingYourPackageModel.FK_ShipmentStates_Shipment" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

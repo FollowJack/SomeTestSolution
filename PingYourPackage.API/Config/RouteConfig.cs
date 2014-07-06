@@ -11,7 +11,7 @@ namespace PingYourPackage.API.Config
     {
         public static void RegisterRoutes(HttpConfiguration config)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

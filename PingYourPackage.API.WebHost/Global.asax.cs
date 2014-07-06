@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Routing;
 using PingYourPackage.API.Config;
+using PingYourPackage.Domain.Entities.Configuration;
 
 namespace PingYourPackage.API.WebHost
 {
@@ -16,7 +17,10 @@ namespace PingYourPackage.API.WebHost
 
             RouteConfig.RegisterRoutes(config);
             WebAPIConfig.Configure(config);
+            DbInitializer.Initialize();
             AutofacWebAPI.Initialize(config);
+
+
         }
     }
 }
