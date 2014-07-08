@@ -63,6 +63,8 @@
     <Compile Include="Entities\Affiliate.cs">
       <DependentUpon>PingYourPackage.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\Extensions\ShipmentRepositoryExtensions.cs" />
+    <Compile Include="Entities\Extensions\ShipmentTypeRepositoriesExtensions.cs" />
     <Compile Include="Entities\IEntityImplementations.cs" />
     <Compile Include="Entities\Core\EntityRepository.cs" />
     <Compile Include="Entities\Core\IEntity.cs" />
@@ -101,8 +103,10 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IMembershipService.cs" />
+    <Compile Include="Services\IShipmentService.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="Services\OperationResult.cs" />
+    <Compile Include="Services\ShipmentService.cs" />
     <Compile Include="Services\ValidUserContext.cs" />
   </ItemGroup>
   <ItemGroup>
