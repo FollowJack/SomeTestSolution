@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PingYourPackage.API.MessageHandlers
+namespace PingYourPackage.API.MessageHandler
 {
     public class RequireHttpsMessageHandler : DelegatingHandler
     {

@@ -9,7 +9,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.Validation;
 using System.Web.Http.Validation.Providers;
 using PingYourPackage.API.Formatting;
-using PingYourPackage.API.MessageHandlers;
+using PingYourPackage.API.MessageHandler;
 
 namespace PingYourPackage.API.Config
 {
@@ -17,7 +17,7 @@ namespace PingYourPackage.API.Config
     {
         public static void Configure(HttpConfiguration config)
         {
-            //Formatters
+            #region Formatters
             var jqueryFormatter = config.Formatters.FirstOrDefault(
                 x => x.GetType() == typeof(JQueryMvcFormUrlEncodedFormatter));
 
@@ -29,14 +29,18 @@ namespace PingYourPackage.API.Config
             {
                 formatter.RequiredMemberSelector = new SuppressedRequiredMemberSelector();
             }
+            #endregion
 
-            //MessageHandlers
+            #region MessageHandlers
             config.MessageHandlers.Add(new RequireHttpsMessageHandler());
+            config.MessageHandlers.Add(new PingYourPackageAuthHandler());
+            #endregion
 
-            //Default Services
+            #region Default Services
             config.Services.Replace(typeof(IContentNegotiator), new DefaultContentNegotiator(excludeMatchOnTypeOnly: true));
 
             config.Services.RemoveAll(typeof(ModelValidatorProvider), validator => !(validator is DataAnnotationsModelValidatorProvider));
+            #endregion
         }
     }
 }
