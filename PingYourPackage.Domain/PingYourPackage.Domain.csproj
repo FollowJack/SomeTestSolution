@@ -63,6 +63,7 @@
     <Compile Include="Entities\Affiliate.cs">
       <DependentUpon>PingYourPackage.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\Extensions\SchipmentStateRepositoryExtensions.cs" />
     <Compile Include="Entities\Extensions\ShipmentRepositoryExtensions.cs" />
     <Compile Include="Entities\Extensions\ShipmentTypeRepositoriesExtensions.cs" />
     <Compile Include="Entities\IEntityImplementations.cs" />

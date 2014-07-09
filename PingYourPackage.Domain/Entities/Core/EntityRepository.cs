@@ -93,6 +93,12 @@ namespace PingYourPackage.Domain.Entities.Core
             DbEntityEntry dbEntityEntry = _entitiesContext.Entry<T>(entity);
             dbEntityEntry.State = EntityState.Deleted;
         }
+        public virtual void DeleteGraph(T entity)
+        {
+            DbSet<T> dbSet = _entitiesContext.Set<T>();
+            dbSet.Attach(entity);
+            dbSet.Remove(entity);
+        }
 
         public virtual void Save()
         {

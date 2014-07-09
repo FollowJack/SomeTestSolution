@@ -28,9 +28,9 @@ namespace PingYourPackage.Domain.Services
         OperationResult RemoveShipment(Shipment shipment);
 
         IEnumerable<ShipmentState> GetShipmentStates(int shipmentId);
-        OperationResult<ShipmentState> AddShipmentState(int shipmentId, ShipmentStatus status);
+        OperationResult<ShipmentState> AddShipmentState(int shipmentID, ShipmentStatus status);
 
-        bool IsAffiliateRelatedToUser(int affiliateId, string username);
+        bool IsAffiliateRelatedToUser(int affiliateID, string username);
 
     }
 }

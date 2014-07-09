@@ -33,8 +33,7 @@ namespace PingYourPackage.Domain.Services
             _membershipService = membershipService;
         }
 
-        // ShipmentType
-
+        #region ShipmentType
         public PaginatedList<ShipmentType> GetShipmentTypes(int pageIndex, int pageSize)
         {
 
@@ -82,8 +81,9 @@ namespace PingYourPackage.Domain.Services
             return shipmentType;
         }
 
-        // Affiliate
+        #endregion
 
+        #region Affiliate
         public PaginatedList<Affiliate> GetAffiliates(int pageIndex, int pageSize)
         {
 
@@ -133,9 +133,9 @@ namespace PingYourPackage.Domain.Services
 
             return affiliate;
         }
+        #endregion
 
-        // Shipment
-
+        #region Shipment
         public PaginatedList<Shipment> GetShipments(int pageIndex, int pageSize)
         {
 
@@ -161,130 +161,112 @@ namespace PingYourPackage.Domain.Services
         {
 
             var shipment = GetInitialShipments()
-                .FirstOrDefault(x => x.Key == key);
+                .FirstOrDefault(x => x.ID == id);
 
             return shipment;
         }
 
         public OperationResult<Shipment> AddShipment(Shipment shipment)
         {
-
-            var affiliate = _affiliateRepository.GetSingle(shipment.AffiliateKey);
-            var shipmentType = _shipmentTypeRepository.GetSingle(shipment.ShipmentTypeKey);
+            var affiliate = _affiliateRepository.GetSingle(shipment.AffiliateID);
+            var shipmentType = _shipmentTypeRepository.GetSingle(shipment.ShipmentTypeID);
 
             if (affiliate == null || shipmentType == null)
-            {
-
                 return new OperationResult<Shipment>(false);
-            }
 
-            shipment.Key = Guid.NewGuid();
             shipment.CreatedOn = DateTime.Now;
 
             _shipmentRepository.Add(shipment);
             _shipmentRepository.Save();
 
             // Add the first state for this shipment
-            var shipmentState = InsertFirstShipmentState(shipment.Key);
+            var shipmentState = InsertFirstShipmentState(shipment.ID);
 
             // Add the down level references manual so that
             // we don't have to have a trip to database to get them
             shipment.ShipmentType = shipmentType;
             shipment.ShipmentStates = new List<ShipmentState> { shipmentState };
 
-            return new OperationResult<Shipment>(true)
-            {
-                Entity = shipment
-            };
+            return new OperationResult<Shipment>(true) { Entity = shipment };
         }
 
         public Shipment UpdateShipment(Shipment shipment)
         {
-
             _shipmentRepository.Edit(shipment);
             _shipmentRepository.Save();
 
             // Get the shipment seperately so that 
             // we would have down level references such as ShipmentStates.
-            var updatedShipment = GetShipment(shipment.Key);
+            var updatedShipment = GetShipment(shipment.ID);
 
             return shipment;
         }
 
         public OperationResult RemoveShipment(Shipment shipment)
         {
-
             if (IsShipmentRemovable(shipment))
             {
-
                 _shipmentRepository.DeleteGraph(shipment);
                 _shipmentRepository.Save();
 
                 return new OperationResult(true);
             }
-
             return new OperationResult(false);
         }
+        #endregion
 
-        // ShipmentState
-
-        public IEnumerable<ShipmentState> GetShipmentStates(Guid shipmentKey)
+        #region ShipmentState
+        public IEnumerable<ShipmentState> GetShipmentStates(int shipmentID)
         {
-
-            var shipmentStates = _shipmentStateRepository.GetAllByShipmentKey(shipmentKey);
+            var shipmentStates = _shipmentStateRepository.GetAllByShipmentID(shipmentID);
             return shipmentStates;
         }
 
-        public OperationResult<ShipmentState> AddShipmentState(Guid shipmentKey, ShipmentStatus status)
+        public OperationResult<ShipmentState> AddShipmentState(int shipmentID, ShipmentStatus status)
         {
-
-            if (!IsShipmentStateInsertable(shipmentKey, status))
+            if (!IsShipmentStateInsertable(shipmentID, status))
             {
-
                 return new OperationResult<ShipmentState>(false);
             }
 
-            var shipmentState = InsertShipmentState(shipmentKey, status);
+            var shipmentState = InsertShipmentState(shipmentID, status);
             return new OperationResult<ShipmentState>(true)
             {
                 Entity = shipmentState
             };
         }
+        #endregion
 
-        // Others
-
-        public bool IsAffiliateRelatedToUser(Guid affiliateKey, string username)
+        #region Others
+        public bool IsAffiliateRelatedToUser(int affiliateID, string username)
         {
-
-            var affiliate = GetAffiliate(affiliateKey);
+            var affiliate = GetAffiliate(affiliateID);
 
             return affiliate != null &&
                    affiliate.User.Name.Equals(username);
         }
+        #endregion
 
-        // Private helpers
+        #region private Helpers
 
         private IQueryable<Shipment> GetInitialShipments()
         {
-
-            return _shipmentRepository.AllIncluding(x =>
-                    x.ShipmentType, x => x.ShipmentStates).OrderBy(x => x.CreatedOn);
+            return _shipmentRepository
+                .AllIncluding(x => x.ShipmentType, x => x.ShipmentStates)
+                .OrderBy(x => x.CreatedOn);
         }
 
-        private ShipmentState InsertFirstShipmentState(Guid ShipmentKey)
+        private ShipmentState InsertFirstShipmentState(int shipmentID)
         {
-
-            return InsertShipmentState(ShipmentKey, ShipmentStatus.Ordered);
+            return InsertShipmentState(shipmentID, ShipmentStatus.Ordered);
         }
 
-        private ShipmentState InsertShipmentState(Guid ShipmentKey, ShipmentStatus status)
+        private ShipmentState InsertShipmentState(int shipmentID, ShipmentStatus status)
         {
-
             var shipmentState = new ShipmentState
             {
-                Key = Guid.NewGuid(),
-                ShipmentKey = ShipmentKey,
-                ShipmentStatus = status,
+                ShipmentID = shipmentID,
+                ShipmentStatus = (int)status,
                 CreatedOn = DateTime.Now
             };
 
@@ -294,25 +276,25 @@ namespace PingYourPackage.Domain.Services
             return shipmentState;
         }
 
-        private bool IsShipmentStateInsertable(Guid shipmentKey, ShipmentStatus status)
+        private bool IsShipmentStateInsertable(int shipmentID, ShipmentStatus status)
         {
+            var shipmentStates = GetShipmentStates(shipmentID);
+            var latestState = shipmentStates
+                .OrderByDescending(state => state.ShipmentStatus)
+                .First();
 
-            var shipmentStates = GetShipmentStates(shipmentKey);
-            var latestState = (from state in shipmentStates
-                               orderby state.ShipmentStatus descending
-                               select state).First();
-
-            return status > latestState.ShipmentStatus;
+            return (int)status > latestState.ShipmentStatus;
         }
 
         private bool IsShipmentRemovable(Shipment shipment)
         {
+            var latestStatus =
+                shipment.ShipmentStates
+                    .OrderByDescending(shipmentState => shipmentState.ShipmentStatus)
+                    .First();
 
-            var latestStatus = (from shipmentState in shipment.ShipmentStates.ToList()
-                                orderby shipmentState.ShipmentStatus descending
-                                select shipmentState).First();
-
-            return latestStatus.ShipmentStatus < ShipmentStatus.InTransit;
+            return latestStatus.ShipmentStatus < (int)ShipmentStatus.InTransit;
         }
+        #endregion
     }
 }

@@ -4,14 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Routing.Constraints;
 
 namespace PingYourPackage.API.Config
 {
     public class RouteConfig
     {
-        public static void RegisterRoutes(HttpConfiguration config)
+        public static void RegisterRoutes(HttpRouteCollection routes)
         {
-            //throw new NotImplementedException();
+            routes.MapHttpRoute(
+                "DefaultHttpRoute",
+                "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional };
         }
     }
 }
