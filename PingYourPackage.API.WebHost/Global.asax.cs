@@ -9,18 +9,16 @@ using PingYourPackage.Domain.Entities.Configuration;
 
 namespace PingYourPackage.API.WebHost
 {
-    public class WebApiApplication : System.Web.HttpApplication
+    public class WebApiApplication : HttpApplication
     {
         protected void Application_Start()
         {
             var config = GlobalConfiguration.Configuration;
-
+            
             RouteConfig.RegisterRoutes(config);
             WebAPIConfig.Configure(config);
             DbInitializer.Initialize();
             AutofacWebAPI.Initialize(config);
-
-
         }
     }
 }

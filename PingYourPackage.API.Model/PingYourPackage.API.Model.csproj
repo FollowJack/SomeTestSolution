@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -42,12 +43,30 @@
     <Compile Include="Dtos\AffiliateDto.cs" />
     <Compile Include="Dtos\AffiliateMemberInfo.cs" />
     <Compile Include="Dtos\IDto.cs" />
+    <Compile Include="Dtos\IPaginatedDto.cs" />
+    <Compile Include="Dtos\PageginatedDto.cs" />
     <Compile Include="Dtos\RoleDto.cs" />
     <Compile Include="Dtos\ShipmentDto.cs" />
     <Compile Include="Dtos\ShipmentStateDto.cs" />
     <Compile Include="Dtos\ShipmentTypeDto.cs" />
     <Compile Include="Dtos\UserDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestCommands\IRequestCommand.cs" />
+    <Compile Include="RequestCommands\PageginatedRequestCommands.cs" />
+    <Compile Include="RequestModels\AffiliateBaseRequestModel.cs" />
+    <Compile Include="RequestModels\AffiliateRequestModel.cs" />
+    <Compile Include="RequestModels\AffiliateUpateRequestModel.cs" />
+    <Compile Include="RequestModels\ShipmentBaseRequestModel.cs" />
+    <Compile Include="RequestModels\ShipmentRequestModel.cs" />
+    <Compile Include="RequestModels\ShipmentStateRequestModel.cs" />
+    <Compile Include="RequestModels\ShipmentTypeRequestModel.cs" />
+    <Compile Include="RequestModels\ShipmentUpdateRequestModel.cs" />
+    <Compile Include="RequestModels\UserBaseRequestModel.cs" />
+    <Compile Include="RequestModels\UserRequestModel.cs" />
+    <Compile Include="RequestModels\UserUpdateRequestModel.cs" />
+    <Compile Include="Validation\MaximunAttribute.cs" />
+    <Compile Include="Validation\MinimumAttribute.cs" />
+    <Compile Include="Validation\OptionsValue.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

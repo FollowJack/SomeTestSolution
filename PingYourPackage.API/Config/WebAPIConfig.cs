@@ -10,6 +10,7 @@ using System.Web.Http.Validation;
 using System.Web.Http.Validation.Providers;
 using PingYourPackage.API.Formatting;
 using PingYourPackage.API.MessageHandler;
+using PingYourPackage.API.Model.RequestCommands;
 
 namespace PingYourPackage.API.Config
 {
@@ -34,6 +35,13 @@ namespace PingYourPackage.API.Config
             #region MessageHandlers
             config.MessageHandlers.Add(new RequireHttpsMessageHandler());
             config.MessageHandlers.Add(new PingYourPackageAuthHandler());
+            #endregion
+
+            #region ParameterBindingrules
+            config.ParameterBindingRules
+                .Insert(0,descriptor => typeof(IRequestCommand).IsAssignableFrom(descriptor.ParameterType)
+                          ? new FromUriAttribute().GetBinding(descriptor) 
+                          : null);
             #endregion
 
             #region Default Services
